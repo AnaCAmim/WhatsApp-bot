@@ -1,12 +1,12 @@
 # Disparador de WhatsApp
 
-Interface gráfica (desktop, Tkinter) para automatizar o envio de mensagens
-pelo WhatsApp Web usando Selenium.
+Interface gráfica (desktop, Tkinter) para automatizar o envio de mensagens,
+imagens e vídeos pelo WhatsApp Web usando Selenium.
 
 ## Estrutura do projeto
 
 ```
-whatsapp_bot/
+disparoweb/
 ├── main.py                # ponto de entrada (abre a interface)
 ├── gui.py                 # interface gráfica (Tkinter)
 ├── bot.py                 # lógica de automação (Selenium)
@@ -25,7 +25,8 @@ whatsapp_bot/
 ## Instalação
 
 ```bash
-cd whatsapp_bot
+git clone https://github.com/AnaCAmim/WhatsApp-bot.git
+cd WhatsApp-bot
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -45,15 +46,18 @@ python main.py
    vez em diante a sessão fica salva em `chrome-profile/` e o login costuma
    ser automático.
 2. **Contatos**: clique em "Carregar arquivo" e selecione um `.csv` (colunas
-   `nome,telefone`) ou `.txt` (um telefone por linha). Use o
-   `contatos_exemplo.csv` como modelo. O telefone deve incluir o DDI
-   (código do país), por exemplo `5583999999999` para o Brasil.
+   `nome,telefone`, aceita separador `,` ou `;`) ou `.txt` (um telefone por
+   linha). Use o `contatos_exemplo.csv` como modelo. O telefone deve incluir
+   o DDI (código do país), por exemplo `5583999999999` para o Brasil.
 3. **Mensagem**: escreva o texto. Use `{nome}` no meio da frase para
    personalizar automaticamente com o nome de cada contato.
-4. **Intervalo**: defina um intervalo mínimo e máximo (em segundos) entre
+4. **Imagem ou vídeo (opcional)**: clique em "Selecionar imagem/vídeo" para
+   anexar um arquivo (`.png`, `.jpg`, `.gif`, `.webp`, `.mp4`, `.mov`, `.avi`,
+   `.mkv`). O texto da mensagem é enviado como legenda junto com o arquivo.
+5. **Intervalo**: defina um intervalo mínimo e máximo (em segundos) entre
    um envio e outro — o valor real é sorteado dentro dessa faixa a cada
    mensagem, para simular um comportamento mais humano.
-5. **Iniciar disparo**: confirme e acompanhe o progresso e o log em tempo
+6. **Iniciar disparo**: confirme e acompanhe o progresso e o log em tempo
    real. É possível clicar em "Parar" a qualquer momento para interromper
    com segurança entre um envio e outro.
 
@@ -82,5 +86,8 @@ python main.py
 - **"Não foi possível abrir a conversa"**: normalmente indica número sem
   WhatsApp, número mal formatado (falta o DDI) ou carregamento lento —
   aumente o timeout em `bot.py` se sua internet for instável.
+- **Falha ao enviar imagem/vídeo**: os seletores do WhatsApp Web mudam com
+  frequência; consulte o log para saber em qual etapa travou (menu de
+  anexo, upload do arquivo ou botão de enviar).
 - Se o Chrome não abrir, confirme que ele está instalado e que nenhuma
   outra instância está usando a mesma pasta `chrome-profile/`.
