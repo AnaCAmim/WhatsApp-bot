@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+chrome-profile/
+venv/
+.venv/
+*.png
