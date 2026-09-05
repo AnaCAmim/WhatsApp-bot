@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conversas - WhatsApp Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            <h2>Bot Control</h2>
+        </div>
+        <nav>
+            <a href="/dashboard"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>Dashboard</a>
+            <a href="/conversas" class="active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>Conversas</a>
+            <a href="/fila"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Fila</a>
+        </nav>
+        <div class="version">v0.1.0-alpha</div>
+    </aside>
+
+    <main class="content">
+        <header>
+            <div>
+                <h1>Disparo de Conversas</h1>
+                <p>Configure uma mensagem e coloque os destinatários em uma fila controlada de envio.</p>
+            </div>
+            <div class="header-status">
+                <span id="header-whatsapp" class="offline">WhatsApp</span>
+                <span id="header-bot" class="offline">Bot</span>
+                <span id="header-mode" class="mode">HEADLESS</span>
+            </div>
+        </header>
+
+        <div id="page-alert" class="campaign-alert hidden"></div>
+
+        <div class="grid-2">
+            <section class="panel">
+                <h2>Conteúdo da Mensagem</h2>
+
+                <div class="media-tabs">
+                    <button type="button" class="media-tab active" data-type="text" onclick="switchMedia('text')">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h7"></path></svg>
+                        Texto
+                    </button>
+                    <button type="button" class="media-tab" data-type="image" onclick="switchMedia('image')">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Imagem
+                    </button>
+                    <button type="button" class="media-tab" data-type="video" onclick="switchMedia('video')">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Vídeo
+                    </button>
+                    <button type="button" class="media-tab" data-type="document" onclick="switchMedia('document')">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Documento
+                    </button>
+                </div>
+
+                <div id="media-upload-area" class="hidden campaign-field-gap">
+                    <div class="upload-area compact" onclick="document.getElementById('media-file').click()">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <span id="media-file-name">Selecionar arquivo de mídia</span>
+                    </div>
+                    <input type="file" id="media-file" hidden>
+                </div>
+
+                <label class="label" for="message-text">Texto da Mensagem</label>
+                <textarea id="message-text" class="input-field" rows="6" maxlength="4096" placeholder="Digite sua mensagem aqui... Você pode usar {nome} para personalizar."></textarea>
+                <div class="char-counter"><span id="char-count">0</span> / 4096 caracteres</div>
+                <p class="field-help">A variável <strong>{nome}</strong> é substituída pelo valor da coluna Nome para cada destinatário.</p>
+            </section>
+
+            <section class="panel">
+                <h2>Base de Contatos</h2>
+                <p class="panel-description">Envie um CSV ou XLSX contendo as colunas <strong>Nome</strong> e <strong>Numero</strong>.</p>
+
+                <div class="upload-area" id="drop-zone" onclick="document.getElementById('contact-file').click()">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <div>
+                        <strong>Clique para enviar</strong> ou arraste o arquivo<br>
+                        <small>Formatos aceitos: .xlsx, .csv · até 1000 contatos</small>
+                    </div>
+                </div>
+                <input type="file" id="contact-file" accept=".csv,.xlsx" hidden>
+
+                <div id="file-info" class="file-info hidden">
+                    <span id="file-name-text"></span>
+                    <span id="contact-validation"></span>
+                </div>
+
+                <div id="contact-warnings" class="contact-warnings hidden"></div>
+
+                <div id="contacts-preview" class="hidden contacts-preview-scroll">
+                    <table class="contact-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Número normalizado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contacts-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <section class="panel">
+            <div class="action-bar">
+                <div class="action-summary">
+                    <div>Total de destinatários: <strong id="total-contacts">0</strong></div>
+                    <label class="consent-check">
+                        <input type="checkbox" id="consent-confirmation">
+                        <span>Confirmo que esta base pode receber esta comunicação.</span>
+                    </label>
+                </div>
+                <button id="start-sending-btn" class="start-button" disabled onclick="startSending()">
+                    Iniciar Disparo
+                </button>
+            </div>
+        </section>
+
+        <section id="campaign-panel" class="panel hidden">
+            <div class="panel-header">
+                <div>
+                    <h2>Campanha atual</h2>
+                    <p id="campaign-id-text">-</p>
+                </div>
+                <span id="campaign-status" class="campaign-status">-</span>
+            </div>
+
+            <div class="campaign-progress-track">
+                <div id="campaign-progress-bar" class="campaign-progress-bar" style="width: 0%"></div>
+            </div>
+
+            <div class="campaign-stats">
+                <div><span>Total</span><strong id="campaign-total">0</strong></div>
+                <div><span>Na fila</span><strong id="campaign-queued">0</strong></div>
+                <div><span>Enviadas</span><strong id="campaign-sent">0</strong></div>
+                <div><span>Erros</span><strong id="campaign-errors">0</strong></div>
+            </div>
+
+            <div id="campaign-error-list" class="campaign-error-list hidden"></div>
+
+            <div class="campaign-actions">
+                <button id="cancel-campaign-btn" class="secondary-danger-button" onclick="cancelCampaign()">Cancelar campanha</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+let selectedMediaType = "text";
+let selectedContactFile = null;
+let selectedMediaFile = null;
+let totalContacts = 0;
+let currentCampaignId = null;
+let campaignPolling = null;
+
+const messageTextarea = document.getElementById("message-text");
+const contactFileInput = document.getElementById("contact-file");
+const mediaFileInput = document.getElementById("media-file");
+const consentCheckbox = document.getElementById("consent-confirmation");
+const startButton = document.getElementById("start-sending-btn");
+const dropZone = document.getElementById("drop-zone");
+
+function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+}
+
+function showAlert(message, type = "error") {
+    const alert = document.getElementById("page-alert");
+    alert.className = `campaign-alert ${type}`;
+    alert.textContent = message;
+    alert.classList.remove("hidden");
+}
+
+function clearAlert() {
+    document.getElementById("page-alert").classList.add("hidden");
+}
+
+function switchMedia(type) {
+    selectedMediaType = type;
+
+    document.querySelectorAll(".media-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.type === type);
+    });
+
+    const mediaArea = document.getElementById("media-upload-area");
+    if (type === "text") {
+        mediaArea.classList.add("hidden");
+    } else {
+        mediaArea.classList.remove("hidden");
+        const names = {
+            image: "Selecionar Imagem (JPG, PNG, WEBP)",
+            video: "Selecionar Vídeo (MP4, MOV, WEBM)",
+            document: "Selecionar Documento (PDF, DOCX, XLSX, CSV)"
+        };
+        document.getElementById("media-file-name").innerText = selectedMediaFile?.name || names[type];
+        mediaFileInput.accept =
+            type === "image" ? ".jpg,.jpeg,.png,.webp" :
+            type === "video" ? ".mp4,.mov,.webm" :
+            ".pdf,.doc,.docx,.txt,.xlsx,.csv";
+    }
+
+    updateStartButton();
+}
+
+messageTextarea.addEventListener("input", () => {
+    document.getElementById("char-count").innerText = messageTextarea.value.length;
+    updateStartButton();
+});
+
+consentCheckbox.addEventListener("change", updateStartButton);
+
+mediaFileInput.addEventListener("change", event => {
+    selectedMediaFile = event.target.files[0] || null;
+    if (selectedMediaFile) {
+        document.getElementById("media-file-name").innerText = selectedMediaFile.name;
+    }
+    updateStartButton();
+});
+
+["dragover", "dragenter"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+});
+
+["dragleave", "drop"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.remove("dragover");
+    });
+});
+
+dropZone.addEventListener("drop", event => {
+    const file = event.dataTransfer.files[0];
+    if (file) handleContactFile(file);
+});
+
+contactFileInput.addEventListener("change", event => {
+    const file = event.target.files[0];
+    if (file) handleContactFile(file);
+});
+
+async function handleContactFile(file) {
+    clearAlert();
+    selectedContactFile = file;
+    totalContacts = 0;
+    updateStartButton();
+
+    document.getElementById("file-info").classList.remove("hidden");
+    document.getElementById("file-name-text").innerText = file.name;
+    document.getElementById("contact-validation").innerText = "Validando...";
+    document.getElementById("contacts-preview").classList.add("hidden");
+    document.getElementById("contact-warnings").classList.add("hidden");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("/api/campaigns/preview", {
+            method: "POST",
+            body: formData
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Falha validando contatos.");
+        }
+
+        totalContacts = data.total;
+        document.getElementById("total-contacts").innerText = totalContacts;
+        document.getElementById("contact-validation").innerText = `${totalContacts} contato(s) válido(s)`;
+
+        const tbody = document.getElementById("contacts-body");
+        tbody.innerHTML = data.contacts.map(contact => `
+            <tr>
+                <td>${escapeHtml(contact.nome)}</td>
+                <td>+${escapeHtml(contact.numero)}</td>
+            </tr>
+        `).join("");
+
+        document.getElementById("contacts-preview").classList.remove("hidden");
+
+        if (data.warnings?.length) {
+            const warnings = document.getElementById("contact-warnings");
+            warnings.innerHTML = `<strong>Avisos:</strong><br>${data.warnings.map(escapeHtml).join("<br>")}`;
+            warnings.classList.remove("hidden");
+        }
+
+        if (data.preview_truncated) {
+            showAlert("A prévia mostra os primeiros 100 contatos. Todos os contatos válidos serão incluídos na campanha.", "info");
+        }
+
+    } catch (error) {
+        selectedContactFile = null;
+        totalContacts = 0;
+        document.getElementById("total-contacts").innerText = "0";
+        document.getElementById("contact-validation").innerText = "Arquivo inválido";
+        showAlert(error.message);
+    }
+
+    updateStartButton();
+}
+
+function updateStartButton() {
+    const hasContacts = selectedContactFile && totalContacts > 0;
+    const hasConsent = consentCheckbox.checked;
+    const hasContent = selectedMediaType === "text"
+        ? messageTextarea.value.trim().length > 0
+        : selectedMediaFile !== null;
+
+    startButton.disabled = !(hasContacts && hasConsent && hasContent);
+}
+
+async function startSending() {
+    clearAlert();
+    if (startButton.disabled) return;
+
+    startButton.disabled = true;
+    startButton.innerText = "Criando campanha...";
+
+    const formData = new FormData();
+    formData.append("message_type", selectedMediaType);
+    formData.append("text", messageTextarea.value);
+    formData.append("confirmed", consentCheckbox.checked ? "true" : "false");
+    formData.append("contacts_file", selectedContactFile);
+
+    if (selectedMediaType !== "text" && selectedMediaFile) {
+        formData.append("media_file", selectedMediaFile);
+    }
+
+    try {
+        const response = await fetch("/api/campaigns", {
+            method: "POST",
+            body: formData
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Não foi possível criar a campanha.");
+        }
+
+        currentCampaignId = data.campaign.id;
+        renderCampaign(data.campaign);
+        showAlert("Campanha adicionada à fila com sucesso.", "success");
+        startCampaignPolling();
+
+    } catch (error) {
+        showAlert(error.message);
+    } finally {
+        startButton.innerText = "Iniciar Disparo";
+        updateStartButton();
+    }
+}
+
+function startCampaignPolling() {
+    if (campaignPolling) clearInterval(campaignPolling);
+    loadCampaign();
+    campaignPolling = setInterval(loadCampaign, 2000);
+}
+
+async function loadCampaign() {
+    const endpoint = currentCampaignId
+        ? `/api/campaigns/${currentCampaignId}`
+        : "/api/campaigns/latest";
+
+    try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        if (!response.ok || !data.campaign) return;
+
+        currentCampaignId = data.campaign.id;
+        renderCampaign(data.campaign);
+
+        if (["COMPLETED", "PARTIAL", "CANCELLED", "FAILED"].includes(data.campaign.status)) {
+            if (campaignPolling) {
+                clearInterval(campaignPolling);
+                campaignPolling = null;
+            }
+        }
+    } catch (error) {
+        console.error("Erro consultando campanha:", error);
+    }
+}
+
+function renderCampaign(campaign) {
+    document.getElementById("campaign-panel").classList.remove("hidden");
+    document.getElementById("campaign-id-text").innerText = `ID ${campaign.id.slice(0, 8)} · ${campaign.message_type.toUpperCase()}`;
+
+    const statusEl = document.getElementById("campaign-status");
+    statusEl.innerText = campaign.status;
+    statusEl.className = `campaign-status status-${campaign.status.toLowerCase()}`;
+
+    document.getElementById("campaign-total").innerText = campaign.total;
+    document.getElementById("campaign-queued").innerText = campaign.queued + campaign.sending;
+    document.getElementById("campaign-sent").innerText = campaign.sent;
+    document.getElementById("campaign-errors").innerText = campaign.errors;
+
+    const completed = campaign.sent + campaign.errors + campaign.cancelled;
+    const percent = campaign.total > 0 ? Math.round((completed / campaign.total) * 100) : 0;
+    document.getElementById("campaign-progress-bar").style.width = `${percent}%`;
+
+    const cancelButton = document.getElementById("cancel-campaign-btn");
+    cancelButton.disabled = !["QUEUED", "RUNNING"].includes(campaign.status);
+
+    const errorList = document.getElementById("campaign-error-list");
+    if (campaign.error_items?.length) {
+        errorList.innerHTML = campaign.error_items.map(item => `
+            <div><strong>${escapeHtml(item.name)}</strong> (+${escapeHtml(item.phone)}): ${escapeHtml(item.last_error)}</div>
+        `).join("");
+        errorList.classList.remove("hidden");
+    } else {
+        errorList.classList.add("hidden");
+    }
+}
+
+async function cancelCampaign() {
+    if (!currentCampaignId) return;
+    if (!confirm("Cancelar os destinatários que ainda estão na fila?")) return;
+
+    try {
+        const response = await fetch(`/api/campaigns/${currentCampaignId}/cancel`, {
+            method: "POST"
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || "Falha ao cancelar campanha.");
+        renderCampaign(data.campaign);
+        showAlert("Campanha cancelada. Itens já enviados não são revertidos.", "info");
+    } catch (error) {
+        showAlert(error.message);
+    }
+}
+
+async function loadRuntimeStatus() {
+    try {
+        const response = await fetch("/api/status");
+        if (!response.ok) return;
+        const data = await response.json();
+
+        const whatsapp = document.getElementById("header-whatsapp");
+        whatsapp.className = data.whatsapp.connected ? "online" : "offline";
+
+        const bot = document.getElementById("header-bot");
+        bot.className = data.bot.running && !data.bot.paused ? "online" : "paused";
+
+        document.getElementById("header-mode").innerText = data.selenium.mode.toUpperCase();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+loadRuntimeStatus();
+setInterval(loadRuntimeStatus, 5000);
+loadCampaign();
+</script>
+
+</body>
+</html>
