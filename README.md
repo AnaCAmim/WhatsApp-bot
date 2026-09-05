@@ -38,7 +38,7 @@ automaticamente — não é necessário instalar nada além do Chrome.
 ## Como usar
 
 ```bash
-python main.py
+python -m uvicorn main:app
 ```
 
 1. **Conectar**: clique em "Conectar ao WhatsApp". Uma janela do Chrome vai

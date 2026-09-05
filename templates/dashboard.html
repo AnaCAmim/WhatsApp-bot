@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WhatsApp Bot Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <!-- Ícone do WhatsApp/Bot -->
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+            </svg>
+            <h2>Bot Control</h2>
+        </div>
+        
+        <nav>
+            <a href="/dashboard" class="active">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Dashboard
+            </a>
+            <a href="/conversas">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                Conversas
+            </a>
+            <a href="/fila">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                Fila
+            </a>
+            <a href="#">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Logs
+            </a>
+            <a href="#">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Configurações
+            </a>
+        </nav>
+        
+        <div class="version">
+            v0.1.0-alpha
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+        <header>
+            <div>
+                <h1>Dashboard</h1>
+                <p>Visão geral em tempo real da automação</p>
+            </div>
+            <div class="header-status">
+                <span id="header-whatsapp" class="offline">WhatsApp</span>
+                <span id="header-bot" class="offline">Bot</span>
+                <span id="header-mode" class="mode">HEADLESS</span>
+            </div>
+        </header>
+
+        <!-- STATUS OPERACIONAL -->
+        <section class="status-grid">
+            <div class="status-card">
+                <span class="label">WhatsApp</span>
+                <strong id="whatsapp-status"><span class="status-dot offline"></span> Carregando...</strong>
+            </div>
+            <div class="status-card">
+                <span class="label">Selenium</span>
+                <strong id="selenium-status"><span class="status-dot offline"></span> Carregando...</strong>
+            </div>
+            <div class="status-card">
+                <span class="label">Bot</span>
+                <strong id="bot-status"><span class="status-dot offline"></span> Carregando...</strong>
+            </div>
+            <div class="status-card">
+                <span class="label">Uptime</span>
+                <strong id="uptime">00:00:00</strong>
+            </div>
+        </section>
+
+        <!-- MÉTRICAS -->
+        <section class="metrics">
+            <div class="metric">
+                <span>Recebidas</span>
+                <strong id="messages-received">0</strong>
+            </div>
+            <div class="metric">
+                <span>Enviadas</span>
+                <strong id="messages-sent">0</strong>
+            </div>
+            <div class="metric">
+                <span>Pendentes</span>
+                <strong id="messages-pending">0</strong>
+            </div>
+            <div class="metric">
+                <span>Erros</span>
+                <strong id="errors">0</strong>
+            </div>
+        </section>
+
+        <!-- CONVERSAS NÃO LIDAS -->
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Conversas não lidas</h2>
+                    <p>Snapshot da sidebar antes de o bot abrir e capturar as mensagens.</p>
+                </div>
+                <span id="unread-chat-count" class="counter-badge">0</span>
+            </div>
+
+            <div id="unread-chat-list" class="unread-chat-list">
+                <div class="empty-state">Nenhuma conversa não lida.</div>
+            </div>
+
+            <div class="scanner-footer">
+                Último scan: <strong id="last-message-scan">-</strong>
+            </div>
+        </section>
+
+        <!-- MENSAGENS CAPTURADAS -->
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Mensagens capturadas</h2>
+                    <p>Últimas mensagens textuais persistidas pelo bot no SQLite.</p>
+                </div>
+            </div>
+
+            <div id="recent-message-list" class="recent-message-list">
+                <div class="empty-state">Nenhuma mensagem capturada.</div>
+            </div>
+        </section>
+
+        <!-- CONTROLE -->
+        <section class="panel">
+            <h2>Controle do Bot</h2>
+            <p id="automation-description">Verificando estado...</p>
+            <button id="pause-button" onclick="toggleBot()" disabled>Carregando...</button>
+        </section>
+
+        <!-- HEARTBEAT -->
+        <section class="panel">
+            <h2>Monitoramento</h2>
+            <div class="monitor">
+                <div>
+                    <span>Último heartbeat</span>
+                    <strong id="heartbeat">-</strong>
+                </div>
+                <div>
+                    <span>Modo</span>
+                    <strong id="mode">HEADLESS</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECUPERAÇÃO AUTOMÁTICA -->
+        <section class="panel">
+            <h2>Recuperação automática</h2>
+            <div class="monitor recovery-monitor">
+                <div>
+                    <span>Estado</span>
+                    <strong id="recovery-status">Normal</strong>
+                </div>
+                <div>
+                    <span>Tentativa</span>
+                    <strong id="recovery-attempt">0</strong>
+                </div>
+                <div>
+                    <span>Motivo</span>
+                    <strong id="recovery-reason">-</strong>
+                </div>
+                <div>
+                    <span>Última recuperação</span>
+                    <strong id="last-recovery">-</strong>
+                </div>
+                <div>
+                    <span>Health check</span>
+                    <strong id="last-health-check">-</strong>
+                </div>
+                <div>
+                    <span>Interrupção UI</span>
+                    <strong id="ui-status">Nenhuma</strong>
+                </div>
+                <div>
+                    <span>Última interrupção</span>
+                    <strong id="last-ui-interruption">-</strong>
+                </div>
+            </div>
+
+            <div id="ui-blocked-container" class="ui-warning hidden">
+                <span>Interface bloqueada por popup desconhecido</span>
+                <strong id="ui-blocked-message">-</strong>
+                <small id="ui-screenshot-path"></small>
+            </div>
+
+            <div id="last-error-container" class="error-message hidden">
+                <span>Último erro</span>
+                <strong id="last-error">-</strong>
+            </div>
+        </section>
+
+        <!-- EVENTOS -->
+        <section class="panel">
+            <h2>Eventos recentes</h2>
+            <div id="event-list" class="event-list">
+                Nenhum evento registrado.
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+let botPaused = false;
+let pollingInterval = null;
+
+function formatUptime(seconds) {
+    const safeSeconds = Number(seconds || 0);
+    const hours = Math.floor(safeSeconds / 3600);
+    const minutes = Math.floor((safeSeconds % 3600) / 60);
+    const secs = safeSeconds % 60;
+    return [hours, minutes, secs].map(v => String(v).padStart(2, "0")).join(":");
+}
+
+function formatTime(value) {
+    return value ? new Date(value).toLocaleTimeString() : "-";
+}
+
+function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+}
+
+function setDotStatus(element, statusClass, text) {
+    element.innerHTML = `<span class="status-dot ${statusClass}"></span> ${text}`;
+    element.className = statusClass;
+}
+
+function renderBotStatus(data) {
+    const botStatusEl = document.getElementById("bot-status");
+
+    if (!data.bot.running) {
+        setDotStatus(botStatusEl, "offline", "Parado");
+    } else if (data.bot.stage === "reconnecting") {
+        setDotStatus(botStatusEl, "reconnecting", "Reconectando");
+    } else if (data.bot.stage === "degraded") {
+        setDotStatus(botStatusEl, "degraded", "Instável");
+    } else if (data.bot.stage === "waiting_login") {
+        setDotStatus(botStatusEl, "paused", "Aguardando login");
+    } else if (data.bot.stage === "ui_blocked") {
+        setDotStatus(botStatusEl, "paused", "UI bloqueada");
+    } else if (data.bot.stage === "error") {
+        setDotStatus(botStatusEl, "offline", "Erro");
+    } else if (data.bot.paused) {
+        setDotStatus(botStatusEl, "paused", "Pausado");
+    } else {
+        setDotStatus(botStatusEl, "online", "Executando");
+    }
+}
+
+function renderRecovery(data) {
+    const recoveryStatus = document.getElementById("recovery-status");
+    const stage = data.bot.stage;
+
+    const states = {
+        reconnecting: ["Reconectando", "reconnecting"],
+        degraded: ["Instável", "degraded"],
+        error: ["Erro", "offline"],
+        waiting_login: ["Aguardando login", "paused"],
+        ui_blocked: ["Interface bloqueada", "paused"],
+    };
+
+    const [text, className] = states[stage] || ["Normal", "online"];
+    recoveryStatus.innerText = text;
+    recoveryStatus.className = className;
+
+    document.getElementById("recovery-attempt").innerText = data.recovery?.attempt || 0;
+    document.getElementById("recovery-reason").innerText = data.recovery?.reason || "-";
+    document.getElementById("last-recovery").innerText = formatTime(data.recovery?.last_recovery_at);
+    document.getElementById("last-health-check").innerText = formatTime(data.last_health_check);
+
+    const ui = data.ui || {};
+    const uiStatus = document.getElementById("ui-status");
+    const uiBlockedContainer = document.getElementById("ui-blocked-container");
+    const uiBlockedMessage = document.getElementById("ui-blocked-message");
+    const uiScreenshotPath = document.getElementById("ui-screenshot-path");
+
+    document.getElementById("last-ui-interruption").innerText = formatTime(ui.last_interruption_at);
+
+    if (ui.blocked) {
+        uiStatus.innerText = "Bloqueada";
+        uiStatus.className = "paused";
+        uiBlockedContainer.classList.remove("hidden");
+        uiBlockedMessage.innerText = ui.message || "Popup desconhecido.";
+        uiScreenshotPath.innerText = ui.screenshot
+            ? `Screenshot: ${ui.screenshot}`
+            : "Screenshot ainda não disponível.";
+    } else {
+        uiStatus.innerText = "Nenhuma";
+        uiStatus.className = "online";
+        uiBlockedContainer.classList.add("hidden");
+        uiBlockedMessage.innerText = "-";
+        uiScreenshotPath.innerText = "";
+    }
+
+    const errorContainer = document.getElementById("last-error-container");
+    const errorElement = document.getElementById("last-error");
+
+    if (data.last_error) {
+        errorContainer.classList.remove("hidden");
+        errorElement.innerText = data.last_error;
+    } else {
+        errorContainer.classList.add("hidden");
+    }
+}
+
+function renderUnreadChats(data) {
+    const scanner = data.scanner || {};
+    const unreadChats = scanner.unread_chats || [];
+
+    document.getElementById("unread-chat-count").innerText = scanner.unread_chat_count || 0;
+    document.getElementById("last-message-scan").innerText = formatTime(scanner.last_scan_at);
+
+    const list = document.getElementById("unread-chat-list");
+
+    if (unreadChats.length === 0) {
+        list.innerHTML = '<div class="empty-state">Nenhuma conversa não lida.</div>';
+        return;
+    }
+
+    list.innerHTML = unreadChats.map(chat => {
+        const safeName = escapeHtml(chat.name);
+        const initial = safeName.charAt(0).toUpperCase() || "?";
+        const count = Number(chat.unread_count || 0);
+
+        return `
+            <div class="unread-chat-item">
+                <div class="unread-chat-avatar">${initial}</div>
+                <div class="unread-chat-info">
+                    <strong>${safeName}</strong>
+                    <span>Nova atividade detectada</span>
+                </div>
+                <span class="unread-count">${count}</span>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRecentMessages(data) {
+    const recentMessages = data.recent_messages || [];
+    const list = document.getElementById("recent-message-list");
+
+    if (recentMessages.length === 0) {
+        list.innerHTML = '<div class="empty-state">Nenhuma mensagem capturada.</div>';
+        return;
+    }
+
+    list.innerHTML = recentMessages.slice(0, 10).map(message => {
+        const safeChat = escapeHtml(message.chat_name || "Conversa");
+        const safeSender = escapeHtml(message.sender || message.chat_name || "-");
+        const safeContent = escapeHtml(message.content || "");
+
+        return `
+            <div class="message-item">
+                <div class="message-header">
+                    <div>
+                        <strong>${safeChat}</strong>
+                        <span class="message-sender">${safeSender}</span>
+                    </div>
+                    <span>${formatTime(message.captured_at)}</span>
+                </div>
+                <div class="message-content">${safeContent}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderEvents(data) {
+    const eventList = document.getElementById("event-list");
+    const events = data.events || [];
+
+    if (events.length === 0) {
+        eventList.innerHTML = '<div class="empty-state">Nenhum evento registrado.</div>';
+        return;
+    }
+
+    eventList.innerHTML = events.slice(0, 8).map(event => `
+        <div class="event-item">
+            <span class="event-level ${String(event.level || "info").toLowerCase()}">
+                ${escapeHtml(event.level || "INFO")}
+            </span>
+            <span class="event-time">${formatTime(event.timestamp)}</span>
+            <span class="event-message">${escapeHtml(event.message)}</span>
+        </div>
+    `).join("");
+}
+
+async function loadStatus() {
+    try {
+        const response = await fetch("/api/status", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Status HTTP ${response.status}`);
+        const data = await response.json();
+
+        setDotStatus(
+            document.getElementById("whatsapp-status"),
+            data.whatsapp.connected ? "online" : "offline",
+            data.whatsapp.connected ? "Conectado" : "Desconectado"
+        );
+
+        setDotStatus(
+            document.getElementById("selenium-status"),
+            data.selenium.running ? "online" : "offline",
+            data.selenium.running ? "Executando" : "Parado"
+        );
+
+        renderBotStatus(data);
+        botPaused = Boolean(data.bot.paused);
+
+        document.getElementById("header-whatsapp").className = data.whatsapp.connected ? "online" : "offline";
+        document.getElementById("header-bot").className = (
+            data.bot.running &&
+            data.bot.stage !== "error" &&
+            data.bot.stage !== "reconnecting" &&
+            data.bot.stage !== "ui_blocked"
+        ) ? (data.bot.paused ? "paused" : "online") : "offline";
+
+        document.getElementById("header-mode").innerText = String(data.selenium.mode || "-").toUpperCase();
+        document.getElementById("messages-received").innerText = data.messages.received;
+        document.getElementById("messages-sent").innerText = data.messages.sent;
+        document.getElementById("messages-pending").innerText = data.messages.pending;
+        document.getElementById("errors").innerText = data.errors;
+        document.getElementById("uptime").innerText = formatUptime(data.uptime_seconds);
+        document.getElementById("mode").innerText = String(data.selenium.mode || "-").toUpperCase();
+        document.getElementById("heartbeat").innerText = formatTime(data.last_heartbeat);
+
+        renderRecovery(data);
+        renderUnreadChats(data);
+        renderRecentMessages(data);
+        renderEvents(data);
+
+        const button = document.getElementById("pause-button");
+        const description = document.getElementById("automation-description");
+
+        if (!data.bot.running || data.bot.stage === "error") {
+            button.innerText = "Automação indisponível";
+            button.className = "pause-button";
+            button.disabled = true;
+            description.innerText = "O bot não está disponível para pausa ou retomada neste momento.";
+        } else if (data.bot.stage === "ui_blocked") {
+            button.innerText = "Automação bloqueada pela interface";
+            button.className = "pause-button";
+            button.disabled = true;
+            description.innerText = "Um popup desconhecido está bloqueando o WhatsApp Web. O bot não clicará nele automaticamente.";
+        } else if (botPaused) {
+            button.innerText = "Retomar automação";
+            button.className = "resume-button";
+            button.disabled = false;
+            description.innerText = "A automação está pausada. O scanner continua observando a sidebar, mas não abre conversas nem captura novas mensagens.";
+        } else {
+            button.innerText = "Pausar automação";
+            button.className = "pause-button";
+            button.disabled = false;
+            description.innerText = "A automação está ativa. Na Etapa 2B o bot detecta, abre e persiste mensagens textuais, sem responder.";
+        }
+
+    } catch (error) {
+        console.error("Erro consultando status:", error);
+    }
+}
+
+async function toggleBot() {
+    const button = document.getElementById("pause-button");
+    const originalText = button.innerText;
+
+    button.disabled = true;
+    button.innerText = "Processando...";
+    button.style.opacity = "0.7";
+
+    const endpoint = botPaused ? "/api/bot/resume" : "/api/bot/pause";
+
+    try {
+        const response = await fetch(endpoint, { method: "POST" });
+        if (!response.ok) throw new Error(`Falha na requisição: ${response.status}`);
+        await loadStatus();
+    } catch (error) {
+        console.error("Erro ao alternar o bot:", error);
+        alert("Erro ao comunicar com o servidor.");
+        button.innerText = originalText;
+    } finally {
+        button.style.opacity = "1";
+        button.disabled = false;
+    }
+}
+
+function startPolling() {
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(loadStatus, 2000);
+}
+
+loadStatus();
+startPolling();
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    } else {
+        loadStatus();
+        startPolling();
+    }
+});
+</script>
+
+</body>
+</html>
